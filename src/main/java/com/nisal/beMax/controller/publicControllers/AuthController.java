@@ -1,8 +1,8 @@
-package com.nisal.beMax.controller;
+package com.nisal.beMax.controller.publicControllers;
 
 import com.nisal.beMax.exceptions.UserException;
-import com.nisal.beMax.payload.dto.UserDto;
 import com.nisal.beMax.payload.request.LoginRequestDto;
+import com.nisal.beMax.payload.request.SignUpRequestDto;
 import com.nisal.beMax.payload.response.AuthResponse;
 import com.nisal.beMax.service.AuthService;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signUpHandler(
-            @RequestBody UserDto userDto
+            @RequestBody SignUpRequestDto userDto
     ) throws UserException {
         return ResponseEntity.ok(authService.signup(userDto));
     }

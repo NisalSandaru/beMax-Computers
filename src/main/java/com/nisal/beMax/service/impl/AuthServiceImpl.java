@@ -8,6 +8,7 @@ import com.nisal.beMax.mapper.UserMapper;
 import com.nisal.beMax.model.User;
 import com.nisal.beMax.payload.dto.UserDto;
 import com.nisal.beMax.payload.request.LoginRequestDto;
+import com.nisal.beMax.payload.request.SignUpRequestDto;
 import com.nisal.beMax.payload.response.AuthResponse;
 import com.nisal.beMax.repository.UserRepository;
 import com.nisal.beMax.service.AuthService;
@@ -34,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     private final CustomUserImplementation customUserImplementation;
 
     @Override
-    public AuthResponse signup(UserDto userDto) throws UserException {
+    public AuthResponse signup(SignUpRequestDto userDto) throws UserException {
 
         User user = userRepository.findByEmail(userDto.getEmail());
         if (user != null) {
@@ -50,7 +51,12 @@ public class AuthServiceImpl implements AuthService {
         newUser.setEmail(userDto.getEmail());
         newUser.setPhone(userDto.getPhone());
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        newUser.setRole(userDto.getRole());
+        if(userDto.getRole() == UserRole.ROLE_ADMIN) {
+            newUser.setRole(UserRole.ROLE_ADMIN);
+        }else {
+            newUser.setRole(UserRole.ROLE_USER);
+        }
+
         newUser.setLastLogin(LocalDateTime.now());
 
         User savedUser = userRepository.save(newUser);
