@@ -3,6 +3,7 @@ package com.nisal.beMax.configuration;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 
+@EnableMethodSecurity(prePostEnabled = true)
 @Configuration
 public class SecurityConfig {
 
@@ -26,9 +28,11 @@ public class SecurityConfig {
                 .sessionManagement(management ->
                         management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(Authorize->
-                        Authorize.requestMatchers("/api/**").authenticated()
-                                .requestMatchers("api/super-admin/**")
+                        Authorize.requestMatchers("/api/admin/**").authenticated()
+                                .requestMatchers("/api/admin/super-admin/**")
                                 .hasRole("ADMIN")
+                                .requestMatchers("/api/user/**")
+                                .hasRole("USER")
                                 .anyRequest().permitAll()
                 ).addFilterBefore(new JwtValidator(),
                         BasicAuthenticationFilter.class
